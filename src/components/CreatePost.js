@@ -5,7 +5,8 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
+import {Editor} from '@tinymce/tinymce-react';
 import { postFailure, postStart, postSuccess } from "../redux/postRedux";
 const useStyle = makeStyles(theme => ({
     container: {
@@ -68,7 +69,7 @@ const CreatePost = () => {
     const userid = user.id;
     const [category, setCategory] = React.useState('');
     const [open, setOpen] = React.useState(false);
-
+      
     const handleMenu = (event) => {
         setCategory(event.target.value);
     };
@@ -166,6 +167,12 @@ const CreatePost = () => {
                     className={classes.textarea}
                     onChange={(e) => handleChange(e)}
                 />
+                {/* <Editor rowsMin={5}
+                    key={Math.random() * 10}
+                    name='description'
+                    placeholder="Tell your story..."
+                    className={classes.textarea}
+                    onChange={(e) => handleChange(e)}></Editor> */}
                 {error && 
                 <Alert severity="error">
                     <AlertTitle>Post not Created</AlertTitle>
