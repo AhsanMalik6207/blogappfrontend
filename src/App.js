@@ -10,6 +10,7 @@ import CreateUserprofile from './components/CreateUserprofile'
 import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import Contact from './components/Contact';
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -55,6 +56,7 @@ function App() {
             <Route exact path='/login' component={Login} />
             <Route exact path='/postdetail/:id' component={PostDetail} />
             <Route exact path='/about' component={About} />
+            <Route exact path='/Contact' component={Contact} />
           </Switch>
         </Box>
       </BrowserRouter>
