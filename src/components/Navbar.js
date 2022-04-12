@@ -1,23 +1,30 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Button from '@mui/material/Button';
 import AppBar from '@mui/material/AppBar';
+import HomeIcon from '@mui/icons-material/Home';
+import LoginIcon from '@mui/icons-material/Login';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import InfoIcon from '@mui/icons-material/Info';
+import PhoneIcon from '@mui/icons-material/Phone';
 import Menu from '@mui/material/Menu';
 import { makeStyles, Tooltip } from '@material-ui/core';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import MenuItem from '@mui/material/MenuItem';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import logo from '../images/logo.png';
 import { Link } from 'react-router-dom';
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import LogoutIcon from '@mui/icons-material/Logout';
+import MenuItem from '@mui/material/MenuItem';
+import PersonIcon from '@mui/icons-material/Person';
 const useStyle = makeStyles(theme => ({
   component: {
     background: '#F5EBEB !important',
@@ -31,26 +38,26 @@ const useStyle = makeStyles(theme => ({
     marginRight: 20,
     padding: 10
   },
-  link2: {
+  menuicon: {
+    color: 'black'
+  },
+  linklogohome: {
     textDecoration: 'none',
     color: 'inherit',
-    marginLeft: 40,
-    marginRight: 20,
-    padding: 10,
+    marginRight: '12px'
   }
 }))
 const Navbar = () => {
   const history = useHistory();
   const classes = useStyle();
   const user = useSelector((state) => state.user.currentUser);
-  // this state make for change avatar without refreshing page
   const userprofile = useSelector((state) => state.userprofile.currentUserprofile);
-  const [userprofiledata, setUserprofiledata] = useState('');
-  const imgbefore = `http://localhost:8000/${userprofiledata.slice(7,)}`;
+  const [avatar, setAvatar] = useState('');
+  const imgbefore = `http://localhost:8000/${avatar.slice(7,)}`;
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`http://localhost:8000/userprofile/${user.id}`);
-      setUserprofiledata(response.data.userprofile.picture);
+      setAvatar(response.data.userprofile.picture);
     }
     fetchData();
   }, [userprofile])
@@ -58,90 +65,96 @@ const Navbar = () => {
     localStorage.clear();
     history.push('/login')
   }
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
   return (
     <AppBar className={classes.component}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography variant="h6" noWrap component="div" sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}>
-            <img src={logo} height={90} width={120} />
-          </Typography>
+          <Link to='/' className={classes.linklogohome}>
+            <Typography variant="h6" noWrap component="div" sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}>
+              <img src={logo} height={90} width={120} />
+            </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
+            <Button
+              id="basic-button"
+              aria-controls={open ? 'basic-menu' : undefined}
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
             >
-              <MenuIcon />
-            </IconButton>
+              <MenuIcon className={classes.menuicon} />
+            </Button>
             <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
               }}
             >
-              <Link to='/' className={classes.link2}>
-                <Typography>HOME</Typography>
-              </Link>
-              <Link to='/about' className={classes.link2}>
-                <Typography>ABOUT</Typography>
-              </Link>
-              <Link to='/Contact' className={classes.link2}>
-                <Typography>CONTACT US</Typography>
-              </Link>
-              {user ?
-                <>
-                  <Link to='/createuserprofile' className={classes.link2}>
-                    <Typography>PROFILE</Typography>
-                  </Link>
-                  <Link onClick={logout} to='/login' className={classes.link2} >
-                    <Typography>SIGN OUT</Typography>
-                  </Link>
-                </> :
-                <>
-                  <Link to='/login' className={classes.link2}>
-                    <Typography>LOGIN</Typography>
-                  </Link>
-                  <Link to='/register' className={classes.link2}>
-                    <Typography>REGISTER</Typography>
-                  </Link>
-                </>
+              <MenuItem component={Link} to="/" onClick={handleClose}>
+                <ListItemIcon>
+                  <HomeIcon fontSize="small" />
+                </ListItemIcon>
+                HOME</MenuItem>
+              <MenuItem component={Link} to="/about" onClick={handleClose}>
+                <ListItemIcon>
+                  <InfoIcon fontSize="small" />
+                </ListItemIcon>
+                ABOUT</MenuItem>
+                <MenuItem component={Link} to="/CONTACT" onClick={handleClose}>
+                <PhoneIcon>
+                  <InfoIcon fontSize="small" />
+                </PhoneIcon>
+                CONTACT US</MenuItem>
+              {
+                user ?
+                  <>
+                    <MenuItem component={Link} to="/createuserprofile" onClick={handleClose}>
+                      <ListItemIcon>
+                        <PersonIcon fontSize="small" />
+                      </ListItemIcon>
+                      PROFILE</MenuItem>
+                    <MenuItem component={Link} onClick={logout} to="/login" >
+                      <ListItemIcon>
+                        <LogoutIcon fontSize="small" />
+                      </ListItemIcon>
+                      LOGOUT</MenuItem>
+                  </> :
+                  <>
+                    <MenuItem component={Link} to="/login" onClick={handleClose}>
+                      <ListItemIcon>
+                        <LoginIcon fontSize="small" />
+                      </ListItemIcon>
+                      LOGIN</MenuItem>
+                    <MenuItem component={Link} to="/register" onClick={handleClose}>
+                      <ListItemIcon>
+                        <HowToRegIcon fontSize="small" />
+                      </ListItemIcon>
+                      REGISTER</MenuItem>
+                  </>
               }
             </Menu>
           </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            <img src={logo} height={90} width={120} />
-          </Typography>
+          <Link to='/' className={classes.linklogohome}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+            >
+              <img src={logo} height={90} width={120} />
+            </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Link to='/' className={classes.link}>
               <Typography>HOME</Typography>
@@ -149,8 +162,8 @@ const Navbar = () => {
             <Link to='/about' className={classes.link}>
               <Typography>ABOUT</Typography>
             </Link>
-            <Link to='/Contact' className={classes.link2}>
-                <Typography>CONTACT US</Typography>
+            <Link to='/CONTACT' className={classes.link}>
+              <Typography>CONTACT US</Typography>
             </Link>
             {user ?
               <>
@@ -158,9 +171,9 @@ const Navbar = () => {
                   <Typography>PROFILE</Typography>
                 </Link>
                 <Link onClick={logout} to='/login' className={classes.link}>
-                  <Typography>SIGN OUT</Typography>
+                  <Typography>LOGOUT</Typography>
                 </Link>
-                <Avatar alt="Remy Sharp" src={imgbefore} sx={{ display: 'none' }} />
+                <Avatar alt="No Avatar" src={imgbefore} sx={{ display: 'none' }} />
               </> :
               <>
                 <Link to='/login' className={classes.link}>
@@ -175,20 +188,21 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             {user ?
               <>
-                <Tooltip title={user.name.toUpperCase()}>
-                  <Avatar alt="Remy Sharp" src={imgbefore} sx={{
-                    display: 'inline-block',
-                    width: 50,
-                    height: 50,
-                  }} />
-                </Tooltip>
+                <Link to='/createuserprofile' className={classes.link}>
+                  <Tooltip title={user.name.toUpperCase()}>
+                    <Avatar src={imgbefore} sx={{
+                      display: 'inline-block',
+                      width: 50,
+                      height: 50,
+                    }} />
+                  </Tooltip>
+                </Link>
               </>
               :
               <Link to='/login' className={classes.link}>
                 <Typography><AccessibilityNewIcon /></Typography>
               </Link>
             }
-       
           </Box>
         </Toolbar>
       </Container>

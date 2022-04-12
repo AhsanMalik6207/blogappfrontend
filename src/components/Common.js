@@ -21,27 +21,6 @@ const useStyle = makeStyles((theme) => ({
         position: " absolute",
         left: "20px",
     },
-    arrow: {
-        lineHeight: " 50px",
-        position: " absolute",
-        left: "95px",
-        animationName: "upDown",
-        animationDuration: "0.7s",
-        animationIterationCount: "infinite",
-    },
-    //for build animation we use keyframes
-    "@global": {
-        "@keyframes upDown": {
-            "0%": {
-                transform: "scale(1,1)",
-                paddingTop: "0px",
-            },
-            "100%": {
-                transform: "scale(1,2)",
-                paddingTop: "10px",
-            },
-        },
-    },
     divider: {
         width: "64px",
         height: "4px",
